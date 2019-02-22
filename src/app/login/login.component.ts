@@ -1,4 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { NgForm } from '@angular/forms';
+import { UsuarioService } from '../services/usuario/usuario.service';
+import { Usuario } from '../models/usuario.model';
+
+declare function init_plugins();
+
 
 @Component({
   selector: 'app-login',
@@ -7,9 +14,38 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LoginComponent implements OnInit {
 
-  constructor() { }
+  recuerdame: boolean = false;
+  email: string;
+
+  constructor(
+    public router: Router,
+    public userSrv: UsuarioService
+  ) { }
 
   ngOnInit() {
+    init_plugins();
+
+    this.email = localStorage.getItem('email') || '';
+    if ( this.email.length > 1 ) {
+      this.recuerdame = true;
+    }
+  }
+
+
+  ingresar( forma: NgForm ) {
+
+    if ( forma.invalid ) {
+      return;
+    }
+
+    let usuario = new Usuario( null, forma.value.email, forma.value.password );
+
+    this.userSrv.login(usuario, forma.value.recuerdame )
+    .subscribe( resp => {
+       this.router.navigate(['/dashboard']);
+     });
+
+
   }
 
 }

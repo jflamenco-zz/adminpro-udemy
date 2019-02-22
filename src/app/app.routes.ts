@@ -9,6 +9,7 @@ const AppRoutes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: '**', component: NopagefoundComponent },
+
 ];
 
 export const APP_ROUTES = RouterModule.forRoot( AppRoutes, { useHash: true });
