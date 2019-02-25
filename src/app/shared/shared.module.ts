@@ -1,4 +1,5 @@
 import { NgModule } from "@angular/core";
+import { PipesModule } from '../pipes/pipes.module';
 import { CommonModule } from '@angular/common';
 
 import { HeaderComponent } from './header/header.component';
@@ -13,7 +14,7 @@ import { RouterModule } from '@angular/router';
     HeaderComponent,
     SidebarComponent,
     BreadcrumbsComponent,
-    NopagefoundComponent
+    NopagefoundComponent,
   ],
   exports: [
     HeaderComponent,
@@ -21,7 +22,7 @@ import { RouterModule } from '@angular/router';
     BreadcrumbsComponent,
     NopagefoundComponent
   ],
-  imports: [ RouterModule, CommonModule ]
+  imports: [ RouterModule, CommonModule, PipesModule ]
 })
 export class SharedModule {}
 
