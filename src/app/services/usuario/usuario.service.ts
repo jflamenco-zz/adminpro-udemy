@@ -6,6 +6,7 @@ import { map } from 'rxjs/operators';
 import swal from 'sweetalert';
 import { Router } from '@angular/router';
 import { SubirArchivoService } from '../subir-archivo/subir-archivo.service';
+import { identifierModuleUrl } from '@angular/compiler';
 
 @Injectable({
   providedIn: 'root'
@@ -101,6 +102,18 @@ export class UsuarioService {
      }));
   }
 
+  borrarUsuario( id: string ) {
+
+    let url = URL_API + '/usuario/' + id + '?token=' + this.token;
+
+    return this.http.delete(url)
+    .pipe(map(resp => {
+      swal('Usuario borrado', 'El usuario ha sido eliminado', 'success');
+      return true;
+    }));
+
+  }
+
   actualizarUsuario( usuario: Usuario ) {
 
     let url = URL_API + '/usuario/' + usuario._id;
@@ -108,8 +121,11 @@ export class UsuarioService {
 
     return this.http.put(url, usuario)
       .pipe(map( (resp: any) => {
-        let usuarioDb: Usuario = resp.usuario;
-        this.guardarStorage( usuarioDb._id, this.token, usuarioDb);
+
+        if ( usuario._id === this.usuario._id ) {
+          let usuarioDb: Usuario = resp.usuario;
+          this.guardarStorage( usuarioDb._id, this.token, usuarioDb);
+        }
         swal('Usuario Actualizado', usuario.nombre, 'success');
       }));
 
@@ -129,6 +145,23 @@ export class UsuarioService {
       .catch( resp => {
         console.log(resp);
       });
+
+  }
+
+  cargarUsuarios( desde: number = 0 ) {
+
+    let url = URL_API + '/usuario?desde=' + desde;
+
+    return this.http.get(url);
+
+  }
+
+  buscarUsuarios( termino: string ) {
+
+    let url = URL_API + '/busqueda/coleccion/usuarios/' + termino;
+
+    return this.http.get( url )
+    .pipe( map( (resp: any ) => resp.usuarios));
 
   }
 

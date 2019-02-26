@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { UsuarioService } from '../services/usuario/usuario.service';
@@ -24,7 +24,8 @@ export class LoginComponent implements OnInit {
 
   constructor(
     public router: Router,
-    public userSrv: UsuarioService
+    public userSrv: UsuarioService,
+    private ngZOne: NgZone
   ) { }
 
   ngOnInit() {
@@ -79,7 +80,10 @@ export class LoginComponent implements OnInit {
     let usuario = new Usuario( null, forma.value.email, forma.value.password );
 
     this.userSrv.login(usuario, forma.value.recuerdame )
-    .subscribe( resp => window.location.href = '#/dashboard');
+    .subscribe( resp => {
+      this.ngZOne.run(() =>
+        this.router.navigateByUrl('#/dashboard'));
+    });
 
 
   }
